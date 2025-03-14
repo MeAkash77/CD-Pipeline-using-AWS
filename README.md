@@ -4,16 +4,6 @@
 ## Introduction
 This pattern defines a re-usable CI/CD pipeline written using [AWS CDK v2 (CDK)](https://aws.amazon.com/cdk/). The pipeline includes tests to validate the security of your 3rd party libraries and ensures expedited as well as automated release in desired environments. You can increase the overall security of your applications by putting them through a validation process.
 
-Automating your software build and release process allows for repeatable builds and to rapidly deliver new features to your users. This sort of automation allows you to quickly and easily test each code change and to catch and fix bugs, before releasing your software. You can ensure the quality of your application or infrastructure code by running each change through your staging and release process. Continuous integration (CI) and continuous delivery (CD) embody a culture, set of operating principles, and collection of practices that enable application development teams to deliver code changes more frequently and reliably. The implementation is also known as the CI/CD pipeline.
-
-The intent of this pattern is to accelerate your use of CI/CD pipelines to deploy your code while ensuring the resources you deploy adhere to DevOps best practices. After implementing the sample code, you get an [AWS CodePipeline](https://aws.amazon.com/codepipeline/) with linting, testing, security check, deployment and post-deployment process. 
-
-### Target technology stack
-
-AWS CodePipeline allows you to model the different stages of your software release process using the console interface, the AWS CLI, AWS CloudFormation, or the AWS SDKs. This guide demonstrates the implementation of CodePipeline and its components using AWS CDK. In addition to construct libraries, CDK includes a toolkit (the CLI command cdk), which is the primary tool for interacting with your CDK app. Among other functions, the toolkit provides the ability to convert one or more stacks to CloudFormation templates and deploy them to an AWS account. 
-
-In this example, the following types of resources are generated, after executing the CDK code.
-
 * CodePipeline
 
 AWS CodePipeline is a continuous integration and continuous delivery (CI/CD) service. The service itself is made of different stages, that can be made of different AWS services like [AWS CodeBuild](https://aws.amazon.com/codebuild/) or [AWS CodeDeploy](https://aws.amazon.com/codedeploy/). This extensibility allows AWS CodePipeline to run tasks like compiling or packaging your application code and deploying the generated artifact to a fleet of EC2 instances. To trigger a pipeline you can choose from different options like reacting to code changes made to a AWS CodeCommit repository. AWS CodePipeline deploys the code to various environments such as development, quality assurance and production. To promote the code from one environment to another, e.g. QA/Test to Prod, we recommend you define an approval pattern, either manual or automated, that fits your organization's controls. You can find more information in this [AWS user guide documentation](https://docs.aws.amazon.com/codepipeline/latest/userguide/welcome.html) on AWS CodePipeline.
@@ -40,22 +30,6 @@ This project use AWS CDK v2 based on typescript. The developer laptop/computer s
 * [git-remote-codecommit](https://docs.aws.amazon.com/codecommit/latest/userguide/setting-up-git-remote-codecommit.html) v1.16
 * [node](https://nodejs.org/en/download/) v20
 
-Limitation
-
-This project is based on [AWS CDK v2](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-construct-library.html) and uses TypeScript as a primary language.
-
-### Installation
-
-#### MacOS or Linux
-
-If you are using MacOS, you can install the prerequisites by running the following command in your preferred terminal or also on Linux using [homebrew for Linux](https://docs.brew.sh/Homebrew-on-Linux):
-
-```bash
-brew install node
-brew install git-remote-codecommit
-brew install ruby brew-gem
-brew-gem install cfn-nag
-```
 #### AWS Cloud9
 
 If you are using AWS [Cloud9](https://aws.amazon.com/cloud9/), you can use following command to install the prerequisites:
@@ -164,31 +138,6 @@ You can see the CodePipeline initial execution in [AWS CodePipeline console](htt
 
 `The action failed because no branch named main was found in the selected AWS CodeCommit repository SampleRepository. Make sure you are using the correct branch name, and then try again. Error: null`
 
-You can set up remote origin as a `SampleRepository` and create required main branch by running the following command:
-
-```bash
-RepoName=$(aws cloudformation describe-stacks --stack-name CodePipeline --query "Stacks[0].Outputs[?OutputKey=='RepositoryName'].OutputValue" --output text)
-echo "${RepoName}"
-
-git init
-git branch -m master main
-git remote add origin codecommit://${RepoName}
-git add .
-git commit -m "Initial commit"
-git push -u origin main
-```
-
-## CodePipeline in Action
-
-After successful initial deployment, you should have complete CI/CD pipeline with a `main` branch of `SampleRepository` as a Source branch. As soon as you commit changes to the `main` branch the AWS CodePipeline will trigger and execute following sequence of actions:
-
-1. Get your code from the AWS CodeCommit repository
-2. Build your code
-3. Update the pipeline itself (SelfMutate)
-4. Execute 3 parallel jobs for `Liniting`, `Security` and `UnitTests` checks
-5. In case of success the pipeline will deploy the Main stack with Infrastructure as Code example
-6. Execute post-deployment check for deployed resources
-
 ## Development process via Makefile
 
 To simplify development process and provide an ability to run tests locally we use a Makefile. The Makefile has same steps as AWS Codepipeline. A developer can execute the whole pipeline locally by command make, or execute individual step.
@@ -205,16 +154,3 @@ To clean up your CDK app run the below command:
 cdk destroy --all
 ```
 
-Please be aware that some resources aren't automatically deleted and either need a retention policy that allows deletes or you need to delete them manually in you AWS account.
-
-## Related Resources
-
-* [Get started with common tasks in IAM Identity Center](https://docs.aws.amazon.com/singlesignon/latest/userguide/getting-started.html)
-* [AWS CodePipeline documentation](https://docs.aws.amazon.com/codepipeline/latest/userguide/welcome.html)
-* [AWS CDK](https://aws.amazon.com/cdk/)
-
-
-## Code of Conduct
-This project has adopted the [Amazon Open Source Code of Conduct](https://aws.github.io/code-of-conduct).
-For more information see the [Code of Conduct FAQ](https://aws.github.io/code-of-conduct-faq) or contact
-opensource-codeofconduct@amazon.com with any additional questions or comments.
