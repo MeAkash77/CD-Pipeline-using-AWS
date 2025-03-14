@@ -1,4 +1,3 @@
-[![main](https://github.com/aws-samples/aws-codepipeline-cicd/actions/workflows/pipeline.yaml/badge.svg)](https://github.com/aws-samples/aws-codepipeline-cicd/actions/workflows/pipeline.yaml)
 
 # AWS CodePipeline with CI/CD practices
 ## Introduction
@@ -43,11 +42,6 @@ Note: Cloud9 should have node and npm installed. You can check the installation 
 node -v
 npm -v
 ```
-### AWS CLI SetUp
-
-- Windows: [Configure for HTTPS connections to your CodeCommit repositories](https://docs.aws.amazon.com/codecommit/latest/userguide/setting-up-https-windows.html)
-- Linux, macOS, Unix: [Configure for HTTPS connections to your CodeCommit repositories](https://docs.aws.amazon.com/codecommit/latest/userguide/setting-up-https-unixes.html)
-
 ## Initial Deployment
 
 For the initial deployment in your AWS account, you can run the following command:
